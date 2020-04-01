@@ -3,6 +3,14 @@ from sql_queries import list_drop_tables, list_create_tables
 
 
 def insert_from_dataframe(IPCluster, keyspace, table, dataframe, column_names):
+    """
+    Insert Rows in a keyspace table from a dataframe
+    :param IPCluster: Host Cassandra Address
+    :param keyspace: Keyspace Name
+    :param table: Table Name
+    :param dataframe: Pandas Dataframe
+    :param column_names: list column names
+    """
     cluster, session = keyspace_connection(IPCluster, keyspace)
 
     cql_query = """
@@ -23,6 +31,14 @@ def insert_from_dataframe(IPCluster, keyspace, table, dataframe, column_names):
 
 
 def keyspace_connection(IPCluster, keyspace):
+    """
+    - creates the keyspace if not exists and return cluster and session
+    :param IPCluster: Host Cassandra Address
+    :param keyspace: keyspace Name
+    :return: cluster and session
+    """
+
+    # connect to cluster
     try:
         cluster = Cluster([IPCluster])
         session = cluster.connect()
@@ -30,6 +46,7 @@ def keyspace_connection(IPCluster, keyspace):
         print("Error cluster connection")
         print(e)
 
+    # create sparkify keyspace with SimpleStrategy class
     try:
         session.execute("""CREATE KEYSPACE IF NOT EXISTS sparkifydb WITH REPLICATION = { 'class' : 'SimpleStrategy', 
                         'replication_factor' : 3 };""")
@@ -37,6 +54,7 @@ def keyspace_connection(IPCluster, keyspace):
         print("Error init keyspace")
         print(e)
 
+    # set session
     try:
         session.set_keyspace(keyspace)
     except Exception as e:
@@ -46,11 +64,22 @@ def keyspace_connection(IPCluster, keyspace):
 
 
 def main(IPCluster, keyspace):
+    """
+    - Creates and set session to the sparkify keyspace.
+    - Drops all the tables.
+    - Creates all tables needed.
+    - Finally, closes the connection.
+    :param hostname: Host Cassandra Address
+    :param dbname: Database Name
+    """
+
     cluster, session = keyspace_connection(IPCluster, keyspace)
 
+    # Drops each table using the queries in `list_drop_tables` list.
     for i_drop in list_drop_tables:
         session.execute(i_drop)
 
+    # Creates each table using the queries in `list_create_tables` list.
     for i_create in list_create_tables:
         session.execute(i_create)
 
