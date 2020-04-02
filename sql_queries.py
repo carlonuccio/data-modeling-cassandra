@@ -1,17 +1,18 @@
 # SESSION_SONGS
-drop_song_gender = "DROP TABLE IF EXISTS SONG_GENDER"
-create_song_gender = "CREATE TABLE IF NOT EXISTS SONG_GENDER(gender text, song text, artist_name text \
-                        , PRIMARY KEY((gender), song))"
+drop_session_items = "DROP TABLE IF EXISTS SESSION_ITEMS"
+create_session_items = "CREATE TABLE IF NOT EXISTS SESSION_ITEMS(SESSIONID INT, ITEMINSESSION INT, ARTIST TEXT, " \
+                     "SONG TEXT, LENGTH FLOAT, PRIMARY KEY(SESSIONID, ITEMINSESSION));"
 
 # SESSION_USERS
-drop_song_by_artist_and_location = "DROP TABLE IF EXISTS SONG_ARTIST_LOCATION"
-create_song_by_artist_and_location = "CREATE TABLE IF NOT EXISTS SONG_ARTIST_LOCATION(song text, artist_name text, \
-                                      location TEXT, state text, PRIMARY KEY((location, song), artist_name))"
+drop_session_users = "DROP TABLE IF EXISTS SESSION_USERS"
+create_session_users = "CREATE TABLE IF NOT EXISTS SESSION_USERS(USERID INT, SESSIONID INT, ITEMINSESSION INT, " \
+                       "ARTIST TEXT, SONG TEXT, FIRSTNAME TEXT, LASTNAME TEXT, " \
+                       "PRIMARY KEY((USERID, SESSIONID), ITEMINSESSION));"
 
 # SONG_USERS
-drop_artist_state = "DROP TABLE IF EXISTS ARTIST_STATE"
-create_artist_state = "CREATE TABLE IF NOT EXISTS ARTIST_STATE(artist_name TEXT, state text, song text, " \
-                      "PRIMARY KEY((state, artist_name), song))"
+drop_song_users = "DROP TABLE IF EXISTS SONG_USERS"
+create_song_users = "CREATE TABLE IF NOT EXISTS SONG_USERS(SONG TEXT, USERID INT, FIRSTNAME TEXT, LASTNAME TEXT, " \
+                    "PRIMARY KEY(SONG, USERID));"
 
-list_drop_tables = [drop_song_gender, drop_song_by_artist_and_location, drop_artist_state]
-list_create_tables = [create_song_gender, create_song_by_artist_and_location, create_artist_state]
+list_drop_tables = [drop_session_items, drop_session_users, drop_song_users]
+list_create_tables = [create_session_items, create_session_users, create_song_users]

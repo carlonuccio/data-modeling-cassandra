@@ -30,6 +30,29 @@ def insert_from_dataframe(IPCluster, keyspace, table, dataframe, column_names):
     cluster.shutdown()
 
 
+def query_keyspace(IPCluster, keyspace, cql_query):
+    """
+    query in a keyspace table
+    :param IPCluster: Host Cassandra Address
+    :param keyspace: Keyspace Name
+    :param table: Table Name
+    :param column_names: list column names
+    :param where_clause: list where clause
+    """
+    cluster, session = keyspace_connection(IPCluster, keyspace)
+
+    try:
+        rows = session.execute(cql_query)
+        for row in rows:
+            print(row)
+    except Exception as e:
+        print("Error execute query")
+        print(e)
+
+    session.shutdown()
+    cluster.shutdown()
+
+
 def keyspace_connection(IPCluster, keyspace):
     """
     - creates the keyspace if not exists and return cluster and session
